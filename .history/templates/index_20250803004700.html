@@ -1,7 +1,11 @@
 <!DOCTYPE html>
+<!-- HTML5 文件類型聲明 - 告訴瀏覽器使用現代 HTML5 標準 -->
 <html lang="zh-TW">
+<!-- HTML 根元素，設定繁體中文語言屬性，用於無障礙和 SEO 優化 -->
 <head>
+    <!-- 文件頭部區域，包含元數據和資源聲明 -->
     <meta charset="UTF-8">
+    <!-- 字符編碼設為 UTF-8，支援國際字符 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- 響應式視窗標籤，採用移動優先設計方法 -->
     <title>CoolSpace AI - 智慧節能冷卻系統</title>
@@ -11,20 +15,57 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- Google 字體 - Noto Sans 繁體中文，多種字重用於排版 -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- 主要樣式表，用於組件樣式和版面定義 -->
     <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+    <!-- 核心應用程式 JavaScript - 延遲載入以優化效能 -->
 </head>
 <body>
+    <!-- 網頁的主體內容開始 -->
     <div class="container">
+        <!-- 最外層容器，包住所有內容 -->
+        
+        <!-- Header 頁面頂部區域 -->
         <header class="header">
+            <!-- 網頁標題區域 -->
             <div class="header-content">
+                <!-- 標題內容的容器 -->
                 <h1 class="header-title">🌿 CoolSpace AI</h1>
+                <!-- 主標題，顯示系統名稱 -->
                 <p class="header-subtitle">台灣智慧節能冷卻優化系統 - 支援SDGs永續發展目標</p>
+                <!-- 副標題，說明系統功能 -->
+                <div class="header-stats">
+                    <!-- 統計數據顯示區域 -->
+                    <div class="stat-item">
+                        <!-- 第一個統計項目：電費節省 -->
+                        <span id="totalSavings" class="stat-value">NT$ 4,560</span>
+                        <!-- 顯示節省的電費金額，id 讓程式可以更新這個數字 -->
+                        <span class="stat-label">年度電費節省</span>
+                        <!-- 說明這個數字代表什麼 -->
+                    </div>
+                    <div class="stat-item">
+                        <!-- 第二個統計項目：CO2 減量 -->
+                        <span id="co2Reduction" class="stat-value">1.37噸</span>
+                        <!-- 顯示減少的二氧化碳排放量 -->
+                        <span class="stat-label">CO2 年減量</span>
+                        <!-- 說明標籤 -->
+                    </div>
+                    <div class="stat-item">
+                        <!-- 第三個統計項目：效率提升 -->
+                        <span id="efficiencyGain" class="stat-value">28%</span>
+                        <!-- 顯示冷卻效率提升的百分比 -->
+                        <span class="stat-label">冷卻效率提升</span>
+                        <!-- 說明標籤 -->
+                    </div>
+                </div>
             </div>
         </header>
 
+        <!-- Tab Content -->
         <main class="tab-content-container">
+            <!-- Simulation Tab -->
             <div id="simulation" class="tab-content active">
                 <div class="simulation-layout">
+                    <!-- Control Panel -->
                     <div class="control-panel card">
                         <h2 class="control-title">🎛️ 智慧控制面板</h2>
                         
@@ -77,15 +118,16 @@
                                     <span>🧊</span>
                                     <span>其他物體</span>
                                 </button>
-                                <!-- 新增：風扇 / 冷氣按鈕 -->
-                                <button id="addFanBtn" class="furniture-btn">
-                                <span>🌀</span>
-                                <span>風扇</span>
-                                </button>
-                                <button id="addAcBtn" class="furniture-btn">
-                                <span>❄️</span>
-                                <span>冷氣</span>
-                                </button>
+<!-- 新增：風扇 / 冷氣按鈕 -->
+<button id="addFanBtn" class="furniture-btn">
+  <span>🌀</span>
+  <span>風扇</span>
+</button>
+<button id="addAcBtn" class="furniture-btn">
+  <span>❄️</span>
+  <span>冷氣</span>
+</button>
+
                             </div>
                         </div>
 
@@ -129,8 +171,7 @@
                         </div>
 
                         <!-- AI Suggestions -->
-                        <div id="aiSuggestions" class="suggestions card hidden">
-
+                        <div id="aiSuggestions" class="suggestions card suggestions card hidden">
                             <h2 class="suggestions-title">🧠 AI 智慧分析與建議</h2>
                             <ul id="suggestionText" class="suggestion-list">
                                 <li>歡迎使用 CoolSpace AI！請先選擇房型或新增傢俱，然後點擊「獲取 AI 智慧優化建議」按鈕。</li>
