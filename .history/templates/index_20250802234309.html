@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoolSpace AI - 智慧節能冷卻系統</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <span class="leaf">🌱</span>
+                <h1>CoolSpace AI</h1>
+            </div>
+            <p>台灣智慧節能冷空間優化系統 - 支援SDGs永續發展目標</p>
+        </header>
+
+        <div class="stats-panel">
+            <div class="stat-card">
+                <h3 id="monthly-savings">NT$ 3,008</h3>
+                <p>每月預約省費</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="co2-reduction">0.6噸</h3>
+                <p>CO2 年減量</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="efficiency-gain">23%</h3>
+                <p>冷房效率提升</p>
+            </div>
+        </div>
+
+        <nav class="tabs">
+            <button class="tab active">🌡️ 環境優化</button>
+            <button class="tab">📊 數據分析</button>
+            <button class="tab">🤝 系統整合</button>
+            <button class="tab">📝 報告生成</button>
+            <button class="tab">⚙️ 系統設定</button>
+        </nav>
+
+        <div class="main-content">
+            <div class="control-panel">
+                <h2>🎛️ 智慧控制面板</h2>
+                <div class="temperature-control">
+                    <label>🌡️ 空調溫度設定: <span id="temp-display">26°C</span></label>
+                    <div class="slider-container">
+                        <span>16°C</span>
+                        <input type="range" id="temperature" min="16" max="30" value="26" step="1">
+                        <span>30°C</span>
+                    </div>
+                </div>
+                
+                <div class="room-select">
+                    <label>🏠 房型與配置選擇</label>
+                    <select id="room-type">
+                        <option value="小坪數套房">小坪數套房</option>
+                        <option value="2房1廳">2房1廳</option>
+                        <option value="3房2廳">3房2廳</option>
+                        <option value="辦公空間">辦公空間</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="visualization-panel">
+                <div class="panel-header">
+                    <h2>🏷️ 即時空間機械視覺</h2>
+                    <button class="refresh-btn">更新分析</button>
+                </div>
+                <div class="room-visualization">
+                    <!-- 這裡可以放置房間的視覺化圖形 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tempSlider = document.getElementById('temperature');
+        const tempDisplay = document.getElementById('temp-display');
+        
+        async function updateStats(temperature) {
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        temperature: temperature,
+                        room_type: document.getElementById('room-type').value
+                    })
+                });
+                
+                const data = await response.json();
+                
+                document.getElementById('monthly-savings').textContent = data.monthlySavings;
+                document.getElementById('co2-reduction').textContent = data.co2Reduction;
+                document.getElementById('efficiency-gain').textContent = data.efficiencyGain;
+            } catch (error) {
+                console.error('更新失敗:', error);
+            }
+        }
+
+        // 溫度滑桿事件
+        tempSlider.addEventListener('input', () => {
+            tempDisplay.textContent = `${tempSlider.value}°C`;
+            updateStats(tempSlider.value);
+        });
+
+        // 房型選擇事件
+        document.getElementById('room-type').addEventListener('change', () => {
+            updateStats(tempSlider.value);
+        });
+
+        // 更新按鈕事件
+        document.querySelector('.refresh-btn').addEventListener('click', () => {
+            updateStats(tempSlider.value);
+        });
+    </script>
+</body>
+</html>

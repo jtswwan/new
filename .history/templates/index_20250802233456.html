@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoolSpace AI — Oasis@Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>CoolSpace AI — Oasis@Home</h1>
+        <p>城市微綠洲室內節能優化系統</p>
+    </header>
+
+    <main>
+        <div class="control-panel">
+            <h2>智慧控制面板</h2>
+            
+            <div class="input-group">
+                <label for="temperature">冷氣設定溫度 (°C)</label>
+                <input type="range" id="temperature" min="16" max="30" value="26" step="1">
+                <span id="temp-display">26°C</span>
+            </div>
+
+            <div class="input-group">
+                <label for="room-type">房間類型</label>
+                <select id="room-type">
+                    <option value="客廳">客廳</option>
+                    <option value="臥室">臥室</option>
+                    <option value="書房">書房</option>
+                    <option value="其他">其他</option>
+                </select>
+            </div>
+
+            <button id="analyze-btn">分析節能機會</button>
+        </div>
+
+        <div id="results" class="hidden">
+            <h2>AI 優化建議</h2>
+            <div id="suggestions"></div>
+            <div id="savings"></div>
+        </div>
+    </main>
+
+    <script>
+        // 更新溫度顯示
+        const tempSlider = document.getElementById('temperature');
+        const tempDisplay = document.getElementById('temp-display');
+        tempSlider.addEventListener('input', () => {
+            tempDisplay.textContent = `${tempSlider.value}°C`;
+        });
+
+        // 分析按鈕點擊事件
+        document.getElementById('analyze-btn').addEventListener('click', async () => {
+            const temperature = parseInt(tempSlider.value);
+            const roomType = document.getElementById('room-type').value;
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ temperature, room_type: roomType })
+                });
+
+                const data = await response.json();
+                
+                // 顯示結果
+                const resultsDiv = document.getElementById('results');
+                const suggestionsDiv = document.getElementById('suggestions');
+                const savingsDiv = document.getElementById('savings');
+
+                suggestionsDiv.innerHTML = data.suggestions.map(s => `<p>• ${s}</p>`).join('');
+                savingsDiv.innerHTML = `<p class="savings">💡 ${data.estimated_savings}</p>`;
+                
+                resultsDiv.classList.remove('hidden');
+            } catch (error) {
+                console.error('分析請求失敗:', error);
+                alert('分析過程發生錯誤，請稍後再試。');
+            }
+        });
+    </script>
+</body>
+</html>

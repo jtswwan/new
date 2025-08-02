@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<!-- HTML5 文件類型聲明 - 告訴瀏覽器使用現代 HTML5 標準 -->
+<html lang="zh-TW">
+<!-- HTML 根元素，設定繁體中文語言屬性，用於無障礙和 SEO 優化 -->
+<head>
+    <!-- 文件頭部區域，包含元數據和資源聲明 -->
+    <meta charset="UTF-8">
+    <!-- 字符編碼設為 UTF-8，支援國際字符 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 響應式視窗標籤，採用移動優先設計方法 -->
+    <title>CoolSpace AI - 智慧節能冷卻系統</title>
+    <!-- 文件標題，顯示在瀏覽器分頁並被搜尋引擎使用 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 從 CDN 載入 Chart.js 圖表庫，用於數據視覺化組件 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Google 字體 - Noto Sans 繁體中文，多種字重用於排版 -->
+    <link rel="stylesheet" href="style.css">
+    <!-- 主要樣式表，用於組件樣式和版面定義 -->
+    <script src="app.js" defer></script>
+    <!-- 核心應用程式 JavaScript - 延遲載入以優化效能 -->
+    <script src="frontend_api_integration.js" defer></script>
+    <!-- API integration layer for frontend-backend communication -->
+    <script src="enhanced_frontend_integration.js" defer></script>
+    <!-- Enhanced integration features with offline fallback capabilities -->
+</head>
+<body>
+    <!-- 網頁的主體內容開始 -->
+    <div class="container">
+        <!-- 最外層容器，包住所有內容 -->
+        
+        <!-- Header 頁面頂部區域 -->
+        <header class="header">
+            <!-- 網頁標題區域 -->
+            <div class="header-content">
+                <!-- 標題內容的容器 -->
+                <h1 class="header-title">🌿 CoolSpace AI</h1>
+                <!-- 主標題，顯示系統名稱 -->
+                <p class="header-subtitle">台灣智慧節能冷卻優化系統 - 支援SDGs永續發展目標</p>
+                <!-- 副標題，說明系統功能 -->
+                <div class="header-stats">
+                    <!-- 統計數據顯示區域 -->
+                    <div class="stat-item">
+                        <!-- 第一個統計項目：電費節省 -->
+                        <span id="totalSavings" class="stat-value">NT$ 4,560</span>
+                        <!-- 顯示節省的電費金額，id 讓程式可以更新這個數字 -->
+                        <span class="stat-label">年度電費節省</span>
+                        <!-- 說明這個數字代表什麼 -->
+                    </div>
+                    <div class="stat-item">
+                        <!-- 第二個統計項目：CO2 減量 -->
+                        <span id="co2Reduction" class="stat-value">1.37噸</span>
+                        <!-- 顯示減少的二氧化碳排放量 -->
+                        <span class="stat-label">CO2 年減量</span>
+                        <!-- 說明標籤 -->
+                    </div>
+                    <div class="stat-item">
+                        <!-- 第三個統計項目：效率提升 -->
+                        <span id="efficiencyGain" class="stat-value">28%</span>
+                        <!-- 顯示冷卻效率提升的百分比 -->
+                        <span class="stat-label">冷卻效率提升</span>
+                        <!-- 說明標籤 -->
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tab Navigation 分頁導航區域 -->
+        <nav class="tab-nav">
+            <!-- 導航選單，讓使用者可以切換不同功能頁面 -->
+            <button class="tab-btn active" data-tab="simulation">
+                <!-- 第一個分頁按鈕：模擬優化，active 表示預設選中 -->
+                <!-- data-tab 告訴程式這個按鈕對應哪個頁面 -->
+                <span class="tab-icon">🎯</span>
+                <!-- 分頁圖示 -->
+                <span class="tab-text">模擬優化</span>
+                <!-- 分頁文字 -->
+            </button>
+            <button class="tab-btn" data-tab="analytics">
+                <!-- 第二個分頁按鈕：數據分析 -->
+                <span class="tab-icon">📊</span>
+                <!-- 圖表圖示 -->
+                <span class="tab-text">數據分析</span>
+                <!-- 分頁名稱 -->
+            </button>
+            <button class="tab-btn" data-tab="weather">
+                <!-- 第三個分頁按鈕：氣候整合 -->
+                <span class="tab-icon">🌤️</span>
+                <!-- 天氣圖示 -->
+                <span class="tab-text">氣候整合</span>
+                <!-- 分頁名稱 -->
+            </button>
+            <button class="tab-btn" data-tab="reports">
+                <!-- 第四個分頁按鈕：報告生成 -->
+                <span class="tab-icon">📋</span>
+                <!-- 報告圖示 -->
+                <span class="tab-text">報告生成</span>
+                <!-- 分頁名稱 -->
+            </button>
+            <button class="tab-btn" data-tab="settings">
+                <!-- 第五個分頁按鈕：系統設定 -->
+                <span class="tab-icon">⚙️</span>
+                <!-- 設定圖示 -->
+                <span class="tab-text">系統設定</span>
+                <!-- 分頁名稱 -->
+            </button>
+        </nav>
+
+        <!-- Tab Content -->
+        <main class="tab-content-container">
+            <!-- Simulation Tab -->
+            <div id="simulation" class="tab-content active">
+                <div class="simulation-layout">
+                    <!-- Control Panel -->
+                    <div class="control-panel card">
+                        <h2 class="control-title">🎛️ 智慧控制面板</h2>
+                        
+                        <div class="control-group">
+                            <label class="form-label">
+                                🌡️ 空調溫度設定: <span id="acTempLabel" class="temp-value">26°C</span>
+                            </label>
+                            <input type="range" id="acTemp" min="18" max="30" value="26" class="form-control temp-slider">
+                            <div class="temp-indicators">
+                                <span class="temp-mark">18°C</span>
+                                <span class="temp-mark">24°C</span>
+                                <span class="temp-mark">30°C</span>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="form-label">🏠 房型模板選擇</label>
+                            <select id="roomTemplate" class="form-control">
+                                <option value="custom">自訂佈局</option>
+                                <option value="studio">套房 (25㎡)</option>
+                                <option value="1br">一房一廳 (35㎡)</option>
+                                <option value="2br">兩房一廳 (50㎡)</option>
+                            </select>
+                        </div>
+
+                        <button id="getSuggestionBtn" class="btn btn--primary btn--full-width suggestion-btn">
+                            🤖 獲取 AI 智慧優化建議
+                        </button>
+
+                        <div class="control-group">
+                            <h3 class="section-title">🪑 新增傢俱物品</h3>
+                            <div class="furniture-grid">
+                                <button id="addSofaBtn" class="furniture-btn">
+                                    <span>🛋️</span>
+                                    <span>沙發</span>
+                                </button>
+                                <button id="addTableBtn" class="furniture-btn">
+                                    <span>🪑</span>
+                                    <span>桌子</span>
+                                </button>
+                                <button id="addBedBtn" class="furniture-btn">
+                                    <span>🛏️</span>
+                                    <span>床鋪</span>
+                                </button>
+                                <button id="addDeskBtn" class="furniture-btn">
+                                    <span>📚</span>
+                                    <span>書桌</span>
+                                </button>
+                                <button id="addTvBtn" class="furniture-btn">
+                                    <span>📺</span>
+                                    <span>電視櫃</span>
+                                </button>
+                                <button id="addFridgeBtn" class="furniture-btn">
+                                    <span>🧊</span>
+                                    <span>冰箱</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <h3 class="section-title">📖 操作說明</h3>
+                            <ul class="instruction-list">
+                                <li>拖曳 <span class="highlight green">風扇</span> 調整位置與角度</li>
+                                <li>拖曳 <span class="highlight yellow">傢俱</span> 重新佈局空間</li>
+                                <li>點擊 <span class="highlight green">風扇</span> 旋轉 45 度</li>
+                                <li><span class="highlight blue">空調</span> 位置固定在右上角</li>
+                                <li>觀察即時 <span class="highlight purple">熱力圖</span> 與 <span class="highlight cyan">氣流動畫</span></li>
+                                <li><span class="highlight orange">舒適區</span> 以虛線框標示</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Simulation Canvas -->
+                    <div class="simulation-area">
+                        <div class="canvas-container card">
+                            <div class="canvas-header">
+                                <h3>🌊 即時空間模擬視圖</h3>
+                                <div class="simulation-status">
+                                    <span class="status-indicator active">模擬中</span>
+                                </div>
+                            </div>
+                            <canvas id="simulationCanvas"></canvas>
+                            <div class="canvas-legend">
+                                <div class="legend-item">
+                                    <div class="legend-color heat-cold"></div>
+                                    <span>冷卻區域</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color heat-warm"></div>
+                                    <span>溫暖區域</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color heat-hot"></div>
+                                    <span>高溫區域</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AI Suggestions -->
+                        <div class="suggestions card">
+                            <h2 class="suggestions-title">🧠 AI 智慧分析與建議</h2>
+                            <ul id="suggestionText" class="suggestion-list">
+                                <li>歡迎使用 CoolSpace AI！請先選擇房型或新增傢俱，然後點擊「獲取 AI 智慧優化建議」按鈕。</li>
+                                <li>系統將根據台灣氣候特色，為您提供個人化的節能冷卻方案。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Real-time Metrics -->
+                        <div class="metrics-grid">
+                            <div class="metric-card card">
+                                <div class="metric-icon">😌</div>
+                                <h3 class="metric-title">舒適度評分</h3>
+                                <div id="comfortMetric" class="metric-value success">85%</div>
+                                <div class="metric-description">舒適區域溫度適宜度</div>
+                            </div>
+                            <div class="metric-card card">
+                                <div class="metric-icon">⚡</div>
+                                <h3 class="metric-title">能耗指數</h3>
+                                <div id="energyMetric" class="metric-value error">72</div>
+                                <div class="metric-description">當前功耗水準</div>
+                            </div>
+                            <div class="metric-card card">
+                                <div class="metric-icon">🌪️</div>
+                                <h3 class="metric-title">氣流效率</h3>
+                                <div id="airflowMetric" class="metric-value info">78%</div>
+                                <div class="metric-description">空氣循環優化度</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics" class="tab-content">
+                <div class="analytics-layout">
+                    <div class="chart-section">
+                        <div class="chart-card card">
+                            <h3 class="chart-title">📈 每日用電量趨勢分析</h3>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="dailyChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-card card">
+                            <h3 class="chart-title">📊 月度能耗對比（優化前後）</h3>
+                            <div class="chart-container" style="position: relative; height: 300px;">
+                                <canvas id="monthlyChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-card card">
+                            <h3 class="chart-title">🌱 CO2 減排追蹤</h3>
+                            <div class="chart-container" style="position: relative; height: 250px;">
+                                <canvas id="co2Chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analytics-sidebar">
+                        <div class="cost-analysis card">
+                            <h3 class="section-title">💰 台電費率分析</h3>
+                            <div class="rate-season">
+                                <div class="season-item">
+                                    <span class="season-label">夏月電價 (6-9月)</span>
+                                    <span class="season-rate">3.52 元/度</span>
+                                </div>
+                                <div class="season-item">
+                                    <span class="season-label">非夏月電價 (10-5月)</span>
+                                    <span class="season-rate">2.89 元/度</span>
+                                </div>
+                            </div>
+                            <div class="rate-tier">
+                                <span class="tier-label">目前用電級距</span>
+                                <span class="tier-value">第2級距 (3.52元/度)</span>
+                            </div>
+                            <div class="cost-breakdown">
+                                <div class="cost-item">
+                                    <span>本月預估電費</span>
+                                    <span>NT$ 950</span>
+                                </div>
+                                <div class="cost-item">
+                                    <span>優化前費用</span>
+                                    <span>NT$ 1,330</span>
+                                </div>
+                                <div class="cost-item savings">
+                                    <span>💚 節省金額</span>
+                                    <span>NT$ 380</span>
+                                </div>
+                                <div class="cost-item savings">
+                                    <span>🎯 節省比例</span>
+                                    <span>28.6%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="co2-tracking card">
+                            <h3 class="section-title">🌍 碳排放追蹤</h3>
+                            <div class="co2-metric">
+                                <div class="co2-value">152 kg</div>
+                                <div class="co2-label">本月 CO2 排放</div>
+                            </div>
+                            <div class="co2-comparison">
+                                <span>較優化前減少: 45 kg</span>
+                                <span class="co2-reduction">-22.8%</span>
+                            </div>
+                            <div class="co2-equivalent">
+                                <p>💡 相當於種植 <strong>2 棵樹</strong> 的減碳效果</p>
+                            </div>
+                        </div>
+
+                        <div class="energy-insights card">
+                            <h3 class="section-title">📌 節能洞察</h3>
+                            <ul class="insights-list">
+                                <li>🔥 高耗能時段：14:00-16:00</li>
+                                <li>❄️ 最佳節能時段：22:00-06:00</li>
+                                <li>🌡️ 建議空調溫度：26-28°C</li>
+                                <li>💨 搭配風扇可節電 15-20%</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather Tab -->
+            <div id="weather" class="tab-content">
+                <div class="weather-layout">
+                    <div class="weather-current card">
+                        <h2 class="weather-title">🌤️ 台灣氣候即時資訊</h2>
+                        <div class="city-selector">
+                            <button class="city-btn active" data-city="taipei">台北</button>
+                            <button class="city-btn" data-city="taichung">台中</button>
+                            <button class="city-btn" data-city="kaohsiung">高雄</button>
+                        </div>
+                        <div class="weather-info">
+                            <div class="weather-main">
+                                <div class="weather-temp" id="currentTemp">32°C</div>
+                                <div class="weather-city" id="currentCity">台北市</div>
+                            </div>
+                            <div class="weather-details">
+                                <div class="weather-item">
+                                    <span>💧 濕度</span>
+                                    <span id="currentHumidity">78%</span>
+                                </div>
+                                <div class="weather-item">
+                                    <span>🌡️ 體感溫度</span>
+                                    <span id="feelsLike">36°C</span>
+                                </div>
+                                <div class="weather-item">
+                                    <span>☀️ 紫外線指數</span>
+                                    <span class="uv-high">極強</span>
+                                </div>
+                                <div class="weather-item">
+                                    <span>🌊 熱島效應</span>
+                                    <span class="heat-island">+2.8°C</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="weather-forecast card">
+                        <h3 class="section-title">📅 5日氣溫預報</h3>
+                        <div class="chart-container" style="position: relative; height: 250px;">
+                            <canvas id="weatherChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="seasonal-tips card">
+                        <h3 class="section-title">🌟 當季節能建議</h3>
+                        <div class="season-indicator">
+                            <span class="season-badge summer">夏季模式</span>
+                        </div>
+                        <ul class="tips-list" id="seasonalTips">
+                            <li>建議空調設定26-28°C</li>
+                            <li>開啟除濕功能</li>
+                            <li>善用電風扇增加空氣流動</li>
+                        </ul>
+                    </div>
+
+                    <div class="climate-impact card">
+                        <h3 class="section-title">🌡️ 氣候影響分析</h3>
+                        <div class="impact-metrics">
+                            <div class="impact-item">
+                                <span class="impact-label">都市熱島效應</span>
+                                <span class="impact-value warning">+2.8°C</span>
+                            </div>
+                            <div class="impact-item">
+                                <span class="impact-label">建議室內外溫差</span>
+                                <span class="impact-value success">≤8°C</span>
+                            </div>
+                            <div class="impact-item">
+                                <span class="impact-label">濕度對體感影響</span>
+                                <span class="impact-value info">+4°C</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports" class="tab-content">
+                <div class="reports-layout">
+                    <div class="report-summary card">
+                        <h2 class="report-title">📋 月度能源效率報告</h2>
+                        <div class="report-period">
+                            <span>報告期間：2024年7月 - 2024年12月</span>
+                        </div>
+                        <div class="summary-metrics">
+                            <div class="summary-item">
+                                <span class="summary-value success">28%</span>
+                                <span class="summary-label">整體節能提升</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-value success">NT$ 2,280</span>
+                                <span class="summary-label">半年電費節省</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-value success">270kg</span>
+                                <span class="summary-label">CO2 總減量</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="government-incentives card">
+                        <h3 class="section-title">🏛️ 政府補助與碳權計算</h3>
+                        <div class="incentive-list">
+                            <div class="incentive-item eligible">
+                                <div class="incentive-header">
+                                    <h4>✅ 一級能效冷氣補助</h4>
+                                    <span class="incentive-amount">NT$ 5,000</span>
+                                </div>
+                                <p>汰舊換新節能冷氣最高補助，需符合能效等級一級且汰換10年以上舊機</p>
+                                <div class="incentive-status eligible">符合申請資格</div>
+                            </div>
+                            <div class="incentive-item eligible">
+                                <div class="incentive-header">
+                                    <h4>✅ 智慧節能系統補助</h4>
+                                    <span class="incentive-amount">NT$ 3,000</span>
+                                </div>
+                                <p>安裝具備IoT連網功能之智慧節能控制系統</p>
+                                <div class="incentive-status eligible">符合申請資格</div>
+                            </div>
+                            <div class="incentive-item">
+                                <div class="incentive-header">
+                                    <h4>🌱 碳權交易價值</h4>
+                                    <span class="incentive-amount">NT$ 270</span>
+                                </div>
+                                <p>每噸 CO2 減量可獲得約 NT$ 1,000 碳權（以270kg計算）</p>
+                                <div class="incentive-status partial">預估年收益</div>
+                            </div>
+                        </div>
+                        <div class="total-benefits">
+                            <div class="benefit-item">
+                                <span>💰 可申請補助總額</span>
+                                <span class="benefit-value">NT$ 8,000</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span>🌿 預估年碳權收益</span>
+                                <span class="benefit-value">NT$ 540</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sdg-progress card">
+                        <h3 class="section-title">🎯 聯合國 SDGs 目標達成進度</h3>
+                        <div class="sdg-item">
+                            <div class="sdg-header">
+                                <div class="sdg-badge sdg-7">SDG 7</div>
+                                <div class="sdg-info">
+                                    <span class="sdg-title">可負擔的清潔能源</span>
+                                    <span class="sdg-percentage">78%</span>
+                                </div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill sdg-7-fill" style="width: 78%"></div>
+                            </div>
+                            <p class="sdg-description">每戶年節電1,370度，提升能源使用效率</p>
+                        </div>
+                        
+                        <div class="sdg-item">
+                            <div class="sdg-header">
+                                <div class="sdg-badge sdg-11">SDG 11</div>
+                                <div class="sdg-info">
+                                    <span class="sdg-title">永續城市與社區</span>
+                                    <span class="sdg-percentage">65%</span>
+                                </div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill sdg-11-fill" style="width: 65%"></div>
+                            </div>
+                            <p class="sdg-description">減少熱島效應0.3°C，打造宜居城市環境</p>
+                        </div>
+                        
+                        <div class="sdg-item">
+                            <div class="sdg-header">
+                                <div class="sdg-badge sdg-13">SDG 13</div>
+                                <div class="sdg-info">
+                                    <span class="sdg-title">氣候行動</span>
+                                    <span class="sdg-percentage">82%</span>
+                                </div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill sdg-13-fill" style="width: 82%"></div>
+                            </div>
+                            <p class="sdg-description">每戶年減碳822公斤，支持2050淨零排放目標</p>
+                        </div>
+                    </div>
+
+                    <div class="report-actions card">
+                        <h3 class="section-title">📤 報告輸出與分享</h3>
+                        <div class="report-preview">
+                            <div class="preview-item">
+                                <h4>📄 PDF 完整報告</h4>
+                                <p>包含詳細數據分析、優化建議、環境影響評估</p>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn--outline" id="exportPdfBtn">
+                                📥 匯出 PDF 報告
+                            </button>
+                            <button class="btn btn--outline" id="shareReportBtn">
+                                📱 分享節能成果
+                            </button>
+                            <button class="btn btn--primary" id="scheduleReportBtn">
+                                ⏰ 設定定期報告
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-content">
+                <div class="settings-layout">
+                    <div class="settings-section card">
+                        <h3 class="section-title">😌 個人舒適度偏好</h3>
+                        <div class="setting-item">
+                            <label class="form-label">🌡️ 理想溫度範圍</label>
+                            <div class="temp-range">
+                                <input type="range" id="minTemp" min="22" max="28" value="24" class="form-control">
+                                <span id="tempRangeLabel">24°C - 26°C</span>
+                                <input type="range" id="maxTemp" min="22" max="28" value="26" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label class="form-label">⚖️ 優化優先級設定</label>
+                            <select id="optimizePriority" class="form-control">
+                                <option value="balanced">平衡模式 (舒適度 + 節能)</option>
+                                <option value="comfort">舒適度優先</option>
+                                <option value="saving">節能優先</option>
+                                <option value="eco">環保模式</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-item">
+                            <label class="form-label">🏠 居住型態</label>
+                            <select id="homeType" class="form-control">
+                                <option value="apartment">公寓住宅</option>
+                                <option value="house">透天厝</option>
+                                <option value="condo">社區大樓</option>
+                                <option value="office">辦公空間</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-section card">
+                        <h3 class="section-title">⚡ 電費計算設定</h3>
+                        <div class="setting-item">
+                            <label class="form-label">🏢 電力公司</label>
+                            <select id="utilityCompany" class="form-control">
+                                <option value="taipower">台灣電力公司</option>
+                            </select>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label class="form-label">📊 用電方案</label>
+                            <select id="ratePlan" class="form-control">
+                                <option value="residential">住宅用電 (累進費率)</option>
+                                <option value="timeofuse">時間電價</option>
+                                <option value="industrial">工業用電</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-item">
+                            <label class="form-label">👥 家庭人數</label>
+                            <select id="familySize" class="form-control">
+                                <option value="1">1人</option>
+                                <option value="2">2人</option>
+                                <option value="3">3人</option>
+                                <option value="4">4人以上</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-section card">
+                        <h3 class="section-title">🔔 智慧通知設定</h3>
+                        <div class="setting-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="energyAlerts" checked>
+                                <span class="checkbox-custom"></span>
+                                ⚠️ 能源異常用量警示
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="optimizationTips" checked>
+                                <span class="checkbox-custom"></span>
+                                💡 每日智慧優化建議
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="weatherAlerts">
+                                <span class="checkbox-custom"></span>
+                                🌡️ 極端天氣與節能提醒
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="subsidyNotifications" checked>
+                                <span class="checkbox-custom"></span>
+                                🏛️ 政府補助政策通知
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-section card">
+                        <h3 class="section-title">🌐 語言與顯示設定</h3>
+                        <div class="setting-item">
+                            <label class="form-label">🗣️ 介面語言</label>
+                            <select id="language" class="form-control">
+                                <option value="zh-tw">繁體中文</option>
+                                <option value="zh-cn">简体中文</option>
+                                <option value="en">English</option>
+                            </select>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label class="form-label">🌡️ 溫度單位</label>
+                            <select id="tempUnit" class="form-control">
+                                <option value="celsius">攝氏溫度 (°C)</option>
+                                <option value="fahrenheit">華氏溫度 (°F)</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-item">
+                            <label class="form-label">🎨 主題模式</label>
+                            <select id="themeMode" class="form-control">
+                                <option value="auto">跟隨系統</option>
+                                <option value="light">亮色模式</option>
+                                <option value="dark">深色模式</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button class="btn btn--outline" id="resetSettingsBtn">🔄 重設為預設值</button>
+                        <button class="btn btn--primary" id="saveSettingsBtn">💾 儲存所有設定</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
