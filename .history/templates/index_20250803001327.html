@@ -60,6 +60,47 @@
             </div>
         </header>
 
+        <!-- Tab Navigation 分頁導航區域 -->
+        <nav class="tab-nav">
+            <!-- 導航選單，讓使用者可以切換不同功能頁面 -->
+            <button class="tab-btn active" data-tab="simulation">
+                <!-- 第一個分頁按鈕：模擬優化，active 表示預設選中 -->
+                <!-- data-tab 告訴程式這個按鈕對應哪個頁面 -->
+                <span class="tab-icon">🎯</span>
+                <!-- 分頁圖示 -->
+                <span class="tab-text">模擬優化</span>
+                <!-- 分頁文字 -->
+            </button>
+            <button class="tab-btn" data-tab="analytics">
+                <!-- 第二個分頁按鈕：數據分析 -->
+                <span class="tab-icon">📊</span>
+                <!-- 圖表圖示 -->
+                <span class="tab-text">數據分析</span>
+                <!-- 分頁名稱 -->
+            </button>
+            <button class="tab-btn" data-tab="weather">
+                <!-- 第三個分頁按鈕：氣候整合 -->
+                <span class="tab-icon">🌤️</span>
+                <!-- 天氣圖示 -->
+                <span class="tab-text">氣候整合</span>
+                <!-- 分頁名稱 -->
+            </button>
+            <button class="tab-btn" data-tab="reports">
+                <!-- 第四個分頁按鈕：報告生成 -->
+                <span class="tab-icon">📋</span>
+                <!-- 報告圖示 -->
+                <span class="tab-text">報告生成</span>
+                <!-- 分頁名稱 -->
+            </button>
+            <button class="tab-btn" data-tab="settings">
+                <!-- 第五個分頁按鈕：系統設定 -->
+                <span class="tab-icon">⚙️</span>
+                <!-- 設定圖示 -->
+                <span class="tab-text">系統設定</span>
+                <!-- 分頁名稱 -->
+            </button>
+        </nav>
+
         <!-- Tab Content -->
         <main class="tab-content-container">
             <!-- Simulation Tab -->
@@ -165,7 +206,7 @@
                         </div>
 
                         <!-- AI Suggestions -->
-                        <div id="aiSuggestions" class="suggestions card suggestions card hidden">
+                        <div class="suggestions card">
                             <h2 class="suggestions-title">🧠 AI 智慧分析與建議</h2>
                             <ul id="suggestionText" class="suggestion-list">
                                 <li>歡迎使用 CoolSpace AI！請先選擇房型或新增傢俱，然後點擊「獲取 AI 智慧優化建議」按鈕。</li>
