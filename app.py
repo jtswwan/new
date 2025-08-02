@@ -7,6 +7,7 @@ logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
 import os
 API_KEY = os.getenv("API_KEY")
+client = genai.Client(api_key=API_KEY)
 
 
 @app.route("/")
