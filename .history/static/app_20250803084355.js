@@ -24,56 +24,60 @@ document.addEventListener('DOMContentLoaded', () => {
 if (suggestionBtn && suggestionBlock && suggestionList) {
   // 確保有 window.entities（你下方已經有 const entities = [];）
   window.entities = window.entities || [];
-    async function fetchAISuggestions() {
-        const r = canvas.getBoundingClientRect();
-        const items = (window.entities || []).map(it => ({
-            type: it.type,    // 'sofa' | 'table' | ... | 'fan' | 'ac'
-            kind: it.kind,    // 'furniture' | 'fan' | 'ac'
-            x: Math.round(it.x),
-            y: Math.round(it.y),
-            w: Math.round(it.w),
-            h: Math.round(it.h),
-            angle: +(it.angle || 0).toFixed(3)
-        }));
-  const payload = {
-    ac_temp: Number(document.getElementById('acTemp')?.value || 26),
-    room_template: document.getElementById('roomTemplate')?.value || 'custom',
-    canvas_size: { width: Math.round(r.width), height: Math.round(r.height) },
-    items
-  };
+
+  async function fetchAISuggestions() {
+    // 把畫布尺寸與物件清單（含角度）一起送出
+    const r = canvas.getBoundingClientRect();
+    const items = (window.entities || []).map(it => ({
+      type: it.type,        // 'sofa' | 'table' | 'bed' | 'desk' | 'tv' | 'fridge' | 'fan' | 'ac'
+      kind: it.kind,        // 'furniture' | 'fan' | 'ac'
+      x: Math.round(it.x),
+      y: Math.round(it.y),
+      w: Math.round(it.w),
+      h: Math.round(it.h),
+      angle: +(it.angle || 0).toFixed(3) // 弧度
+    }));
+
+    const payload = {
+      ac_temp: Number(document.getElementById('acTemp')?.value || 26),
+      room_template: document.getElementById('roomTemplate')?.value || 'custom',
+      canvas_size: { width: Math.round(r.width), height: Math.round(r.height) },
+      items
+    };
+
     const res = await fetch('/api/suggestions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
     });
     if (!res.ok) throw new Error('API 失敗');
     const data = await res.json();
-    return data; // ⬅️ 回傳整包
-    }
+    return data.suggestions || [];
+  }
+  //fetchAISuggestions()到這裡
 
-    // 按鈕監聽處改成：
-    suggestionBtn.addEventListener('click', async () => {
+  // 只保留「一個」按鈕監聽
+  suggestionBtn.addEventListener('click', async () => {
     suggestionBtn.disabled = true;
     const oldText = suggestionBtn.textContent;
     suggestionBtn.textContent = '🤖 產生中…';
     try {
-        const data = await fetchAISuggestions();        // ⬅️ 拿整包
-        const tips = Array.isArray(data.suggestions) ? data.suggestions : [];
-        suggestionList.innerHTML = tips.length
+      const tips = await fetchAISuggestions();
+      suggestionList.innerHTML = tips.length
         ? tips.map(t => `<li>${t}</li>`).join('')
         : '<li>目前沒有建議，請先在畫布擺放一些物件再試一次。</li>';
-        updateMetrics(data.metrics);                    // ⬅️ 更新指標
-        suggestionBlock.classList.remove('hidden');
-        suggestionBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } catch (err) {
-        suggestionList.innerHTML = `<li>產生建議時發生錯誤：${err.message}</li>`;
-        suggestionBlock.classList.remove('hidden');
-    } finally {
-        suggestionBtn.disabled = false;
-        suggestionBtn.textContent = oldText;
+      suggestionBlock.classList.remove('hidden');
+      suggestionBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-    });
-
+    catch (err) {
+      suggestionList.innerHTML = `<li>產生建議時發生錯誤：${err.message}</li>`;
+      suggestionBlock.classList.remove('hidden');
+    }
+    finally {
+      suggestionBtn.disabled = false;
+      suggestionBtn.textContent = oldText;
+    }
+  });
 }
 
   // ====== 狀態：家具 + 設備（風扇/冷氣） ======
@@ -84,7 +88,7 @@ if (suggestionBtn && suggestionBlock && suggestionList) {
     bed:    { w: 140, h: 70,  color: '#3b3566', label: '床鋪 🛏️' },
     desk:   { w: 110, h: 60,  color: '#2b3a4a', label: '書桌 📚' },
     tv:     { w: 100, h: 40,  color: '#2f3646', label: '電視櫃 📺' },
-    other: { w:  60, h: 80,  color: '#0f3d3e', label: '其他物體 🧊' }, // 你的 HTML 標成「其他物體」
+    fridge: { w:  60, h: 80,  color: '#0f3d3e', label: '其他物體 🧊' }, // 你的 HTML 標成「其他物體」
   };
 
   // 設備（會吹氣）
@@ -308,18 +312,13 @@ if (suggestionBtn && suggestionBlock && suggestionList) {
   }
 
   // ====== 主迴圈 ======
-    function loop() {
+  function loop() {
     const r = canvas.getBoundingClientRect();
+    ctx.clearRect(0, 0, r.width, r.height);
 
-    // 1) 清除（不受 transform 影響）
-    ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);          // 暫時取消縮放
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.restore();
-
-    // 2) 下面照舊（此時仍是 dpr 縮放座標系）
+    // 生成氣流（僅 fan/ac）
     entities.forEach(it => {
-        if (it.kind === 'fan' || it.kind === 'ac') spawnParticlesFrom(it);
+      if (it.kind === 'fan' || it.kind === 'ac') spawnParticlesFrom(it);
     });
 
     updateParticles();
@@ -327,70 +326,6 @@ if (suggestionBtn && suggestionBlock && suggestionList) {
     drawEntities();
 
     requestAnimationFrame(loop);
-    }
-    loop(); 
-
+  }
+  loop();
 });
-
-// -- 放在 app.js 內，其他函式外層也可以 --
-function updateMetrics(metrics) {
-  if (!metrics || typeof metrics !== 'object') return;
-
-  // 讀值（後端回傳為中文鍵名）
-  const comfort = metrics["舒適度評分"];      // 0–100 (整數)
-  const energy  = metrics["能耗指數"];        // 可能是 0–100 或 "低/中/高"（看你後端設定）
-  const airflow = metrics["氣流效率"];        // 0–100 (整數)
-  const recTemp = metrics["建議冷氣溫度"];    // 整數 (°C)
-
-  // DOM 節點
-  const comfortEl = document.getElementById("comfortMetric");
-  const energyEl  = document.getElementById("energyMetric");
-  const airflowEl = document.getElementById("airflowMetric");
-  const tempEl    = document.getElementById("recommendedTemp"); // 若有
-
-  // 舒適度（0–100）
-  if (comfortEl && isFinite(comfort)) {
-    comfortEl.innerText = `${comfort}`;
-    setMeterColor(comfortEl, Number(comfort)); // 根據數值調色（見下方工具函式）
-  }
-
-  // 能耗指數：同時支援字串枚舉「低/中/高」或數值 0–100
-  if (energyEl && (isFinite(energy) || typeof energy === "string")) {
-    if (typeof energy === "string") {
-      energyEl.innerText = energy;
-      // 低/中/高 對應顏色
-      const map = { "低": 25, "中": 60, "高": 85 };
-      setMeterColor(energyEl, map[energy] ?? 60);
-    } else {
-      energyEl.innerText = `${energy}`;
-      setMeterColor(energyEl, Number(energy));
-    }
-  }
-
-  // 氣流效率（0–100）
-  if (airflowEl && isFinite(airflow)) {
-    airflowEl.innerText = `${airflow}`;
-    setMeterColor(airflowEl, Number(airflow));
-  }
-
-  // 建議冷氣溫度（可選）
-  if (tempEl && isFinite(recTemp)) {
-    tempEl.innerText = `${recTemp}°C`;
-  }
-}
-
-// 依數值切換顏色的工具函式（你也可改成加 class）
-function setMeterColor(el, value) {
-  // 先清掉舊的色彩類別
-  el.classList.remove("metric-low", "metric-mid", "metric-high");
-
-  // 你可以在 CSS 設定這三個 class 的顏色樣式
-  if (value >= 0 && value < 40) {
-    el.classList.add("metric-low");   // 例如綠色
-  } else if (value < 70) {
-    el.classList.add("metric-mid");   // 例如橙色
-  } else {
-    el.classList.add("metric-high");  // 例如紅色
-  }
-}
-

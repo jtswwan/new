@@ -1,7 +1,7 @@
 import os, math, logging, concurrent.futures, functools
 from flask import Flask, request, jsonify, render_template
 from google import genai
-import json
+
 
 logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
@@ -19,9 +19,9 @@ schema = {
     "properties": {
         "分析": {"type": "array", "items": {"type": "string"}},
         "建議": {"type": "array", "items": {"type": "string"}},
-        "能耗指數": {"type": "string","enum": ["低","中","高"]},
-        "舒適度評分": {"type": "integer", "minimum": 0, "maximum": 10},
-        "氣流效率": {"type": "integer", "minimum": 0, "maximum": 10},
+        "舒適度評分": {"type": "integer", "minimum": 0, "maximum": 100},
+        "能耗指數": {"type": "integer", "minimum": 0, "maximum": 100},
+        "氣流效率": {"type": "integer", "minimum": 0, "maximum": 100},
         "建議冷氣溫度": {"type": "integer"}
     },
     "required": ["分析","建議","舒適度評分","能耗指數","氣流效率","建議冷氣溫度"]
@@ -81,29 +81,15 @@ def api_suggestions():
 - 物件清單（位置/尺寸/角度）：{pretty_items}
 
 請輸出以下內容:
-"分析":當前環境的優缺點識別，提供詳細的環境狀況分析
-"建議":提供具體可行的改善措施
-"舒適度評分":基於溫度、濕度、空氣流通等因素，使用1-10分制評分
-"能耗指數":需考慮空調運轉效率，決定[低、中、高]
-"氣流效率":評估空氣循環狀況、通風效果和溫度分布均勻度，使用1-10分制評分
-"建議冷氣溫度":冷氣溫度需平衡舒適度與節能需求
+
 
 """
         print(prompt)
 
         response = call_gemini_sync(prompt,model)
-        text = json.loads(response.text)
+        text = (getattr(response, "text", None) or "").strip()
         print(text)
-        return jsonify({
-            "suggestions": text.get("建議", []),
-            "analysis": text.get("分析", []),
-            "metrics": {
-                "舒適度評分": text.get("舒適度評分"),
-                "能耗指數": text.get("能耗指數"),
-                "氣流效率": text.get("氣流效率"),
-                "建議冷氣溫度": text.get("建議冷氣溫度"),
-            }
-        })
+        return text
 
     except Exception as e:
         app.logger.exception("Gemini API 發生錯誤")

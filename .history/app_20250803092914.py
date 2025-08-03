@@ -6,7 +6,7 @@ import json
 logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
 API_KEY = os.getenv("API_KEY")
-client = genai.Client(api_key=API_KEY)
+client = genai.Client(api_key="AIzaSyC2Ghsjo8tpFnCbeNuDFE2A-2ieAbviw3k")
 
 model = "gemini-2.5-pro"
 

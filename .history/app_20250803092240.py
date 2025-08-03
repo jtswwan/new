@@ -6,7 +6,7 @@ import json
 logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
 API_KEY = os.getenv("API_KEY")
-client = genai.Client(api_key=API_KEY)
+client = genai.Client(api_key="AIzaSyC2Ghsjo8tpFnCbeNuDFE2A-2ieAbviw3k")
 
 model = "gemini-2.5-pro"
 
@@ -92,18 +92,9 @@ def api_suggestions():
         print(prompt)
 
         response = call_gemini_sync(prompt,model)
-        text = json.loads(response.text)
+        text = json.loads(response.text())
         print(text)
-        return jsonify({
-            "suggestions": text.get("建議", []),
-            "analysis": text.get("分析", []),
-            "metrics": {
-                "舒適度評分": text.get("舒適度評分"),
-                "能耗指數": text.get("能耗指數"),
-                "氣流效率": text.get("氣流效率"),
-                "建議冷氣溫度": text.get("建議冷氣溫度"),
-            }
-        })
+        return text["建議"]
 
     except Exception as e:
         app.logger.exception("Gemini API 發生錯誤")

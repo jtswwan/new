@@ -35,6 +35,7 @@ if (suggestionBtn && suggestionBlock && suggestionList) {
             h: Math.round(it.h),
             angle: +(it.angle || 0).toFixed(3)
         }));
+
   const payload = {
     ac_temp: Number(document.getElementById('acTemp')?.value || 26),
     room_template: document.getElementById('roomTemplate')?.value || 'custom',
@@ -308,18 +309,13 @@ if (suggestionBtn && suggestionBlock && suggestionList) {
   }
 
   // ====== 主迴圈 ======
-    function loop() {
+  function loop() {
     const r = canvas.getBoundingClientRect();
+    ctx.clearRect(0, 0, r.width, r.height);
 
-    // 1) 清除（不受 transform 影響）
-    ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);          // 暫時取消縮放
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.restore();
-
-    // 2) 下面照舊（此時仍是 dpr 縮放座標系）
+    // 生成氣流（僅 fan/ac）
     entities.forEach(it => {
-        if (it.kind === 'fan' || it.kind === 'ac') spawnParticlesFrom(it);
+      if (it.kind === 'fan' || it.kind === 'ac') spawnParticlesFrom(it);
     });
 
     updateParticles();
@@ -327,9 +323,8 @@ if (suggestionBtn && suggestionBlock && suggestionList) {
     drawEntities();
 
     requestAnimationFrame(loop);
-    }
-    loop(); 
-
+  }
+  loop();
 });
 
 // -- 放在 app.js 內，其他函式外層也可以 --

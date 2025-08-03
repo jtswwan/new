@@ -328,7 +328,6 @@ if (suggestionBtn && suggestionBlock && suggestionList) {
 
     requestAnimationFrame(loop);
     }
-    loop(); 
 
 });
 
