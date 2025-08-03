@@ -20,8 +20,8 @@ schema = {
         "分析": {"type": "array", "items": {"type": "string"}},
         "建議": {"type": "array", "items": {"type": "string"}},
         "能耗指數": {"type": "string","enum": ["低","中","高"]},
-        "舒適度評分": {"type": "integer", "minimum": 1, "maximum": 10},
-        "氣流效率": {"type": "integer", "minimum": 1, "maximum": 10},
+        "舒適度評分": {"type": "integer", "minimum": 0, "maximum": 10},
+        "氣流效率": {"type": "integer", "minimum": 0, "maximum": 10},
         "建議冷氣溫度": {"type": "integer"}
     },
     "required": ["分析","建議","舒適度評分","能耗指數","氣流效率","建議冷氣溫度"]
@@ -34,8 +34,7 @@ def call_gemini_sync(prompt,model):
         config={
             "temperature": 0.0,  # 隨機性
             "response_mime_type": "application/json",
-            "response_schema": schema,
-            "tool_config": {"function_calling_config": {"mode": "none"}},
+            "response_schema": schema
         }
     )
 
